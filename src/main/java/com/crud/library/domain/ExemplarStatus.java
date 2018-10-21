@@ -1,5 +1,5 @@
 package com.crud.library.domain;
 
 public enum ExemplarStatus {
-    DESTROYED, LOST, AVAILABLE
+    DESTROYED, LOST, AVAILABLE, RENTED
 }

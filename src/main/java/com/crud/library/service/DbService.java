@@ -2,7 +2,6 @@ package com.crud.library.service;
 
 import com.crud.library.domain.Book;
 import com.crud.library.domain.Exemplar;
-import com.crud.library.domain.ExemplarStatus;
 import com.crud.library.domain.Reader;
 import com.crud.library.domain.Rental;
 import com.crud.library.repository.BookRepository;

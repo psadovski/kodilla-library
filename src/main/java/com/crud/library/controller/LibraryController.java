@@ -4,7 +4,10 @@ import com.crud.library.domain.dto.BookDto;
 import com.crud.library.domain.dto.ExemplarDto;
 import com.crud.library.domain.dto.ReaderDto;
 import com.crud.library.domain.dto.RentalDto;
-import com.crud.library.mapper.LibraryMapper;
+import com.crud.library.mapper.BookMapper;
+import com.crud.library.mapper.ExemplarMapper;
+import com.crud.library.mapper.ReaderMapper;
+import com.crud.library.mapper.RentalMapper;
 import com.crud.library.service.DbService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,21 +28,30 @@ public class LibraryController {
     private DbService dbService;
 
     @Autowired
-    private LibraryMapper libraryMapper;
+    private RentalMapper rentalMapper;
+
+    @Autowired
+    private ReaderMapper readerMapper;
+
+    @Autowired
+    private BookMapper bookMapper;
+
+    @Autowired
+    private ExemplarMapper exemplarMapper;
 
     @RequestMapping(method = RequestMethod.POST, value = "createBook", consumes = APPLICATION_JSON_VALUE)
     public Long createBook(@RequestBody BookDto bookDto) {
-        return dbService.saveBook(libraryMapper.mapToBook(bookDto)).getId();
+        return dbService.saveBook(bookMapper.mapBookDtoToBook(bookDto)).getId();
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "createReader", consumes = APPLICATION_JSON_VALUE)
     public Long createReader(@RequestBody ReaderDto readerDto) {
-        return dbService.saveReader(libraryMapper.mapToReader(readerDto)).getId();
+        return dbService.saveReader(readerMapper.mapReaderDtoToReader(readerDto)).getId();
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "createExemplar", consumes = APPLICATION_JSON_VALUE)
     public Long createExemplar(@RequestBody ExemplarDto exemplarDto) {
-        return dbService.saveExemplar(libraryMapper.mapToExemplar(exemplarDto)).getId();
+        return dbService.saveExemplar(exemplarMapper.mapExemplarDtoToExemplar(exemplarDto)).getId();
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "getNumber")
@@ -48,55 +60,55 @@ public class LibraryController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "getExemplars")
-    public List<ExemplarDto> getTasks() {
-        return libraryMapper.mapToExemplarDtoList(dbService.getAllExeplars());
+    public List<ExemplarDto> getExemplars() {
+        return exemplarMapper.mapExemplarsToExemplarsDto(dbService.getAllExeplars());
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "getReaders")
     public List<ReaderDto> getReaders() {
-        return libraryMapper.mapToReaderDtoList(dbService.getAllReaders());
+        return readerMapper.mapReadersToReadersDto(dbService.getAllReaders());
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "getRentals")
     public List<RentalDto> getRentals() {
-        return libraryMapper.mapToRentalDtoList(dbService.getAllRentals());
+        return rentalMapper.mapRentalsToRentalsDto(dbService.getAllRentals());
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "getBook")
-    public BookDto getBook(@RequestParam Long id) throws BookNotFoundException {
-        return libraryMapper.mapToBookDto(dbService.getBook(id).orElseThrow(BookNotFoundException::new));
+    public BookDto getBook(@RequestParam Long id) {
+        return bookMapper.mapBookToBookDto(dbService.getBook(id).orElse(null));
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "getReader")
-    public ReaderDto getReader(@RequestParam Long id) throws ReaderNotFoundException {
-        return libraryMapper.mapToReaderDto(dbService.getReader(id).orElseThrow(ReaderNotFoundException::new));
+    public ReaderDto getReader(@RequestParam Long id) {
+        return readerMapper.mapReaderToReaderDto(dbService.getReader(id).orElse(null));
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "getExemplar")
-    public ExemplarDto getExemplar(@RequestParam Long id) throws ExemplarNotFoundException {
-        return libraryMapper.mapToExemplarDto(dbService.getExemplar(id).orElseThrow(ExemplarNotFoundException::new));
+    public ExemplarDto getExemplar(@RequestParam Long id) {
+        return exemplarMapper.mapExemplarToExemplarDto(dbService.getExemplar(id).orElse(null));
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "getRental")
-    public RentalDto getRental(@RequestParam Long id) throws RentalNotFoundException {
-        return libraryMapper.mapToRentalDto(dbService.getRental(id).orElseThrow(RentalNotFoundException::new));
+    public RentalDto getRental(@RequestParam Long id) {
+        return rentalMapper.mapRentalToRentalDto(dbService.getRental(id).orElse(null));
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "update")
     public ExemplarDto updateStatus(@RequestBody ExemplarDto exemplarDto) {
-        return libraryMapper.mapToExemplarDto(dbService.updateStatus(exemplarDto.getId(),
-                libraryMapper.mapToExemplar(exemplarDto)));
+        return exemplarMapper.mapExemplarToExemplarDto(dbService.updateStatus(exemplarDto.getId(),
+                exemplarMapper.mapExemplarDtoToExemplar(exemplarDto)));
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "borrow")
     public RentalDto borrowExemplar(@RequestBody RentalDto rentalDto) {
-        return libraryMapper.mapToRentalDto(dbService.borrowExemplar(rentalDto.getId(),
-                libraryMapper.mapToRental(rentalDto)));
+        return rentalMapper.mapRentalToRentalDto(dbService.borrowExemplar(rentalDto.getId(),
+                rentalMapper.mapRentalDtoToRental(rentalDto)));
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "return")
     public RentalDto returnExemplar(@RequestBody RentalDto rentalDto) {
-        return libraryMapper.mapToRentalDto(dbService.returnExemplar(rentalDto.getId(),
-                libraryMapper.mapToRental(rentalDto)));
+        return rentalMapper.mapRentalToRentalDto(dbService.returnExemplar(rentalDto.getId(),
+                rentalMapper.mapRentalDtoToRental(rentalDto)));
     }
 }
