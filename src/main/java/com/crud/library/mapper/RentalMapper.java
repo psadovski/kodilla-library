@@ -15,7 +15,7 @@ public class RentalMapper {
             return null;
         }
         return rentalList.stream()
-                .map(t -> new RentalDto(t.getId(), t.getReaderId(), t.getExemplarId(), t.getRentDate(), t.getReturnDate()))
+                .map(t -> mapRentalToRentalDto(t))
                 .collect(Collectors.toList());
     }
 

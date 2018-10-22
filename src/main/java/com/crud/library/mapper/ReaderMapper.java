@@ -37,7 +37,7 @@ public class ReaderMapper {
             return null;
         }
         return readerList.stream()
-                .map(t -> new ReaderDto(t.getId(), t.getName(), t.getSurname(), t.getSignUpDate()))
+                .map(t -> mapReaderToReaderDto(t))
                 .collect(Collectors.toList());
     }
 }

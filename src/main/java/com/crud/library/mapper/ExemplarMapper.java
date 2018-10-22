@@ -35,7 +35,7 @@ public class ExemplarMapper {
             return null;
         }
         return exemplarList.stream()
-                .map(t -> new ExemplarDto(t.getId(), t.getBookId(), t.getStatus()))
+                .map(t -> mapExemplarToExemplarDto(t))
                 .collect(Collectors.toList());
     }
 }
